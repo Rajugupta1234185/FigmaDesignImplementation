@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --card-ms: 700ms;
+  --card-ease: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+html,
+body {
+  background: #fff;
+  color: #2b2b2b;
+  -webkit-font-smoothing: antialiased;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes service-item-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.service-item-enter {
+  animation-name: service-item-enter;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: both;
+  will-change: transform, opacity;
+}
+
+/* UI / UX:
+   starts ABOVE its destination
+   and moves DOWN
+*/
+@keyframes service-item-enter-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.service-item-enter-down {
+  animation-name: service-item-enter-down;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: both;
+  will-change: transform, opacity;
+}
+
+.card-reveal {
+  position: absolute;
+  inset: 0;
+  background: #c33241;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Concave circular reveal: a fixed-radius hole slides across the wide card.
+   The edge is feathered (518 -> 522) so the arc stays smooth while moving. */
+.reveal-mask {
+  -webkit-mask-image: radial-gradient(
+    circle 520px at 50% 50%,
+    transparent 518px,
+    #000 522px
+  );
+  mask-image: radial-gradient(
+    circle 520px at 50% 50%,
+    transparent 518px,
+    #000 522px
+  );
+
+  -webkit-mask-size: 3000px 3000px;
+  mask-size: 3000px 3000px;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+
+  will-change: mask-position;
+  transition:
+    -webkit-mask-position var(--card-ms) var(--card-ease),
+    mask-position var(--card-ms) var(--card-ease);
+}
+
+/* INACTIVE: hole covers the whole card */
+.reveal-mask[data-active="false"] {
+  -webkit-mask-position: -1204px -1270px;
+  mask-position: -1204px -1270px;
+}
+
+/* ACTIVE: hole pushed past the bottom-left, card fully visible */
+.reveal-mask[data-active="true"] {
+  -webkit-mask-position: -1900px -639px;
+  mask-position: -1900px -639px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-mask {
+    transition-duration: 1ms;
+  }
+}
